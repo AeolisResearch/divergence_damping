@@ -1,1 +1,1 @@
-# divergence_damping
+These are python scripts that solve the Laplace's tidal equation/vertical structure equation (solve_tidal_eqs.py) and analyze the thermal tides in the Martian atmosphere from both observations and simulations using FFT (thermal_tides_mars.py). See the comments in the scripts for more detailed usage information.
