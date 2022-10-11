@@ -63,8 +63,8 @@ Examples (for Mars):
     dz=0.015; ztop=300. # Semidirnal (ztop increase won't significantly affect the solution between 0-300m)
     dz=0.01 ; ztop=200. # Terdiurnal (ztop increase won't significantly affect the solution between 0-200m)
 
-    smdiv=0.1; lambda_x=0.; ubc=1
-    x, z = solve_tide_v(smdiv,nu,omg_planet,radius,gravity,rgas,p0,T0,dT0,dts,res,kdiff,lambda_x,heq,dz,ztop,ubc)
+    smdiv=0.1; lambda_x=0.; ubc=1; lbc=0
+    x, zc, dz = solve_tide_v(smdiv,nu,omg_planet,radius,gravity,rgas,p0,T0,dT0,dts,res,kdiff,lambda_x,heq,dz,ztop,ubc,lbc)
 
     (for Earth)
     sn=1; nu=0.5
@@ -289,8 +289,8 @@ def solve_tide_v(smdiv,nu,omg_planet,radius,gravity,rgas,p0,T0,dT0,dts,res,kdiff
     # calculate the tidal heating source term (Eq. 140, Atmospheric Tides, pp125) 
     # kdiff=0.1 # m^2s^{-1} ( for Mars, Martinez et al., 2009)
     # lambda_x = 0. # lambda_x is the longitude in [rad] (0-2*pi)
-    kd=np.sqrt(omega/kdiff)*np.exp(lambda_x*1j/4.)
-    Gn=1j*omega*cp*dT0*np.exp(-kd*zc) # kd is the vertical wavenumber derived from diffusion equation
+    kd=np.sqrt(abs(omega)/kdiff)*np.exp(lambda_x*1j/4.)
+    Gn=1j*abs(omega)*cp*dT0*np.exp(-kd*zc) # kd is the vertical wavenumber derived from diffusion equation
     # ignore the Gn vertical profile since kd~1./kdiff where kdiff is very small for Mars
     #Gn[1:]=0.
     dGndz=-kd*Gn
@@ -386,7 +386,7 @@ def cheb_boyd(N,pf):
        PT = -nx*np.sin(nx*tx)
        phiD2 = -PT/sx
        PTT = -nx**2*tn
-       phiDD2 = (sx*PTT-cx*Pt)/sx**3
+       phiDD2 = (sx*PTT-cx*PT)/sx**3
     else:
        phi2 = tn*sx
        PT = -nx*np.sin(nx*tx)*sx+tn*cx
